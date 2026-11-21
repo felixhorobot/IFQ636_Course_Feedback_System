@@ -9,6 +9,9 @@ const generateToken = (id) => {
 
 const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
+    if (!name || !email || !password) {
+        return res.status(400).json({ message: 'Please enter name, email and password' });
+    }
     try {
         const userExists = await User.findOne({ email });
         if (userExists) return res.status(400).json({ message: 'User already exists' });
@@ -22,6 +25,10 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
+    // empty email make findOne return the first user, so check it first
+    if (!email || !password) {
+        return res.status(400).json({ message: 'Please enter email and password' });
+    }
     try {
         const user = await User.findOne({ email });
         if (user && (await bcrypt.compare(password, user.password))) {
