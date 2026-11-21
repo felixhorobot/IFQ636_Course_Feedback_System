@@ -21,4 +21,12 @@ const protect = async (req, res, next) => {
     }
 };
 
-module.exports = { protect };
+// only let user with this role go to next step
+const requireRole = (role) => (req, res, next) => {
+    if (!req.user || req.user.role !== role) {
+        return res.status(403).json({ message: 'Not allowed for your role' });
+    }
+    next();
+};
+
+module.exports = { protect, requireRole };
