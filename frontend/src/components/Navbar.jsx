@@ -11,33 +11,30 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-blue-600 text-white p-4 flex justify-between items-center">
-      <Link to="/" className="text-2xl font-bold">Course Feedback</Link>
-      <div>
+    <nav className="bg-qut-brand text-white px-6 py-3 flex justify-between items-center">
+      <Link to="/" className="flex items-center gap-4 text-xl font-bold">
+        <img src="/qut-logo.svg" alt="QUT" className="w-12 h-12" />
+        Course Feedback
+      </Link>
+      <div className="flex items-center gap-5">
         {user ? (
           <>
             {user.role === 'student' && (
               <>
-                <Link to="/checkin" className="mr-4">Weekly check-in</Link>
-                <Link to="/my-checkins" className="mr-4">My check-ins</Link>
+                <Link to="/checkin">Weekly check-in</Link>
+                <Link to="/my-checkins">My check-ins</Link>
               </>
             )}
-            {user.role === 'staff' && <Link to="/staff" className="mr-4">Dashboard</Link>}
-            <Link to="/profile" className="mr-4">Profile</Link>
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 px-4 py-2 rounded hover:bg-red-700"
-            >
+            {user.role === 'staff' && <Link to="/staff">Dashboard</Link>}
+            <Link to="/profile">Profile</Link>
+            <button onClick={handleLogout} className="bg-white text-qut-navy font-semibold px-6 py-3">
               Logout
             </button>
           </>
         ) : (
           <>
-            <Link to="/login" className="mr-4">Login</Link>
-            <Link
-              to="/register"
-              className="bg-green-500 px-4 py-2 rounded hover:bg-green-700"
-            >
+            <Link to="/login">Login</Link>
+            <Link to="/register" className="bg-qut-sky text-white font-semibold uppercase px-6 py-3">
               Register
             </Link>
           </>

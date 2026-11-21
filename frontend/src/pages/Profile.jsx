@@ -11,6 +11,8 @@ const Profile = () => {
     address: '',
   });
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     // Fetch profile data from the backend
@@ -43,9 +45,11 @@ const Profile = () => {
       await axiosInstance.put('/api/auth/profile', formData, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
-      alert('Profile updated successfully!');
+      setMessage('Profile updated successfully!');
+      setError('');
     } catch (error) {
-      alert('Failed to update profile. Please try again.');
+      setError('Failed to update profile. Please try again.');
+      setMessage('');
     } finally {
       setLoading(false);
     }
@@ -57,37 +61,39 @@ const Profile = () => {
 
   return (
     <div className="max-w-md mx-auto mt-20">
-      <form onSubmit={handleSubmit} className="bg-white p-6 shadow-md rounded">
-        <h1 className="text-2xl font-bold mb-4 text-center">Your Profile</h1>
+      <form onSubmit={handleSubmit} className="qut-panel">
+        <h1 className="qut-title">Your Profile</h1>
+        {message && <p className="qut-msg-ok">{message}</p>}
+        {error && <p className="qut-msg-error">{error}</p>}
         <input
           type="text"
           placeholder="Name"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          className="w-full mb-4 p-2 border rounded"
+          className="qut-input"
         />
         <input
           type="email"
           placeholder="Email"
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          className="w-full mb-4 p-2 border rounded"
+          className="qut-input"
         />
         <input
           type="text"
           placeholder="University"
           value={formData.university}
           onChange={(e) => setFormData({ ...formData, university: e.target.value })}
-          className="w-full mb-4 p-2 border rounded"
+          className="qut-input"
         />
         <input
           type="text"
           placeholder="Address"
           value={formData.address}
           onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-          className="w-full mb-4 p-2 border rounded"
+          className="qut-input"
         />
-        <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">
+        <button type="submit" className="qut-btn w-full">
           {loading ? 'Updating...' : 'Update Profile'}
         </button>
       </form>
