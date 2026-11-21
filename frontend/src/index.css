@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  @apply bg-qut-bg text-qut-navy font-sans;
+}
+
+/* shared QUT style, so every page look the same as Figma */
+@layer components {
+  .qut-panel { @apply bg-white border-t-4 border-qut-denim p-6; }
+  .qut-title { @apply text-2xl font-bold mb-4; }
+  .qut-input { @apply w-full mb-4 p-3 border border-qut-outline bg-white; }
+  .qut-btn { @apply bg-qut-denim text-white font-semibold text-left px-6 py-3 hover:bg-qut-brand; }
+  .qut-btn-outline { @apply border border-qut-denim text-qut-denim font-semibold text-left px-6 py-3; }
+  .qut-msg-ok { @apply bg-qut-skytint border-l-4 border-qut-sky p-3 mb-4; }
+  .qut-msg-error { @apply bg-qut-pinktint border-l-4 border-qut-pink text-qut-pink p-3 mb-4; }
+}
