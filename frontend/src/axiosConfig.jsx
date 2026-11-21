@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5001', // local
-  //baseURL: 'http://3.26.96.188:5001', // live
+  // use same host as the web page, so it work on localhost and on EC2 after IP change
+  baseURL: `http://${window.location.hostname}:5001`,
   headers: { 'Content-Type': 'application/json' },
 });
 
