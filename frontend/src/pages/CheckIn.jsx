@@ -12,6 +12,7 @@ const CheckIn = () => {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
     const fetchCurrent = async () => {
@@ -36,11 +37,14 @@ const CheckIn = () => {
       return;
     }
     try {
-      const response = await axiosInstance.post('/api/checkins', formData, {
-        headers: { Authorization: `Bearer ${user.token}` },
-      });
+      const headers = { headers: { Authorization: `Bearer ${user.token}` } };
+      // edit use PUT, new check-in use POST
+      const response = editing
+        ? await axiosInstance.put(`/api/checkins/${checkIn._id}`, formData, headers)
+        : await axiosInstance.post('/api/checkins', formData, headers);
       setCheckIn(response.data);
-      setMessage('Check-in sent. Thank you!');
+      setMessage(editing ? 'Your changes have been saved.' : 'Check-in sent. Thank you!');
+      setEditing(false);
       setError('');
     } catch (error) {
       setError(error.response?.data?.message || 'Failed to send check-in.');
@@ -58,22 +62,41 @@ const CheckIn = () => {
     );
   }
 
+  const startEdit = () => {
+    setFormData({
+      pace: checkIn.pace,
+      clarity: checkIn.clarity,
+      workload: checkIn.workload,
+      request: checkIn.request || '',
+      anonymous: checkIn.anonymous,
+    });
+    setMessage('');
+    setEditing(true);
+  };
+
   // already sent, show what student sent
-  if (checkIn) {
+  if (checkIn && !editing) {
     return (
       <div className="max-w-2xl mx-auto mt-10">
         <h1 className="qut-title">Week {week} check-in</h1>
         {message && <p className="qut-msg-ok">{message}</p>}
         {!message && <p className="mb-4">You already sent check-in for this week.</p>}
         <CheckInCard checkIn={checkIn} />
+        {checkIn.status === 'Open' ? (
+          <button onClick={startEdit} className="qut-btn-outline">Edit check-in</button>
+        ) : (
+          <p className="text-qut-copy">Staff have replied, so this check-in can not be changed.</p>
+        )}
       </div>
     );
   }
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto mt-10 qut-panel">
-      <h1 className="qut-title">Week {week} check-in</h1>
-      <p className="text-qut-copy mb-4">Tell us how the class is going this week. It takes about 1 minute.</p>
+      <h1 className="qut-title">{editing ? `Edit week ${week} check-in` : `Week ${week} check-in`}</h1>
+      {!editing && (
+        <p className="text-qut-copy mb-4">Tell us how the class is going this week. It takes about 1 minute.</p>
+      )}
       <RatingInput label="Pace of the class" low="Too slow" high="Too fast" value={formData.pace}
         onChange={(n) => setFormData({ ...formData, pace: n })} />
       <RatingInput label="How clear was the explanation?" low="Not clear" high="Very clear" value={formData.clarity}
@@ -94,7 +117,14 @@ const CheckIn = () => {
         Send as anonymous (staff will not see my name)
       </label>
       {error && <p className="qut-msg-error">{error}</p>}
-      <button type="submit" className="qut-btn w-full">Send check-in</button>
+      {editing ? (
+        <div className="flex gap-3">
+          <button type="submit" className="qut-btn">Save changes</button>
+          <button type="button" onClick={() => setEditing(false)} className="qut-btn-outline">Cancel</button>
+        </div>
+      ) : (
+        <button type="submit" className="qut-btn w-full">Send check-in</button>
+      )}
     </form>
   );
 };
