@@ -131,5 +131,5 @@ The frontend calls the API on the same host as the page (`axiosConfig.jsx`), so 
 
 ## Project links
 
-- Jira: https://homingfelixho.atlassian.net/jira/software/projects/CFS
+- Jira: https://homingfelixho.atlassian.net/browse/CFS
 - Figma: https://www.figma.com/design/ubRRj9UZFnVhBQlFE0rfYy
